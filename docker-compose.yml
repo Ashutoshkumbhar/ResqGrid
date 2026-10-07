@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  resqgrid:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: resqgrid:latest
+    container_name: resqgrid-app
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      # (Optional) Add your Gemini API key:
+      # - GEMINI_API_KEY=your_key_here
+    restart: unless-stopped

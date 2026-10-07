@@ -1,0 +1,60 @@
+{
+  "_note": "Prototype district road graph. Road geometry and statuses are simulated prototype data; node coordinates are real Pune locations.",
+  "nodes": [
+    { "id": "N_HINJ", "name": "Hinjawadi Rescue Base", "latitude": 18.5880, "longitude": 73.7550, "kind": "BASE" },
+    { "id": "N_BANER", "name": "Baner Emergency Base", "latitude": 18.5620, "longitude": 73.7780, "kind": "BASE" },
+    { "id": "N_DAPODI", "name": "Dapodi Fire & Rescue HQ", "latitude": 18.5710, "longitude": 73.8290, "kind": "BASE" }
+  ],
+  "roads": [
+    {
+      "id": "R12", "name": "Wakad Bridge Causeway", "source": "N_HINJ", "destination": "S1",
+      "distanceKm": 4.2, "floodProne": true, "infrastructure": "BRIDGE",
+      "coordinates": [[18.5880, 73.7550], [18.5925, 73.7590], [18.5960, 73.7620], [18.5987, 73.7645]]
+    },
+    {
+      "id": "R7", "name": "Baner North High-Ridge Bypass", "source": "N_HINJ", "destination": "S1",
+      "distanceKm": 7.4, "floodProne": false, "infrastructure": "ROAD",
+      "coordinates": [[18.5880, 73.7550], [18.5800, 73.7600], [18.5750, 73.7720], [18.5850, 73.7800], [18.5950, 73.7750], [18.5987, 73.7645]]
+    },
+    {
+      "id": "R1", "name": "NH-48 Western Bypass Link", "source": "N_HINJ", "destination": "N_BANER",
+      "distanceKm": 4.9, "floodProne": false, "infrastructure": "HIGHWAY",
+      "coordinates": [[18.5880, 73.7550], [18.5770, 73.7660], [18.5690, 73.7730], [18.5620, 73.7780]]
+    },
+    {
+      "id": "R11", "name": "Baner Base Access Road", "source": "N_BANER", "destination": "S4",
+      "distanceKm": 1.0, "floodProne": false, "infrastructure": "ROAD",
+      "coordinates": [[18.5620, 73.7780], [18.5600, 73.7830], [18.5590, 73.7868]]
+    },
+    {
+      "id": "R2", "name": "Baner-Sangvi Elevated Corridor", "source": "S4", "destination": "S2",
+      "distanceKm": 4.6, "floodProne": false, "infrastructure": "ROAD",
+      "coordinates": [[18.5590, 73.7868], [18.5650, 73.7990], [18.5690, 73.8080], [18.5724, 73.8168]]
+    },
+    {
+      "id": "R3", "name": "Sangvi-Dapodi Rivergate Road", "source": "S2", "destination": "S5",
+      "distanceKm": 2.4, "floodProne": true, "infrastructure": "ROAD",
+      "coordinates": [[18.5724, 73.8168], [18.5770, 73.8240], [18.5830, 73.8340]]
+    },
+    {
+      "id": "R4", "name": "Wakad-Sangvi Riverside Link", "source": "S1", "destination": "S2",
+      "distanceKm": 5.1, "floodProne": true, "infrastructure": "ROAD",
+      "coordinates": [[18.5987, 73.7645], [18.5890, 73.7820], [18.5790, 73.8020], [18.5724, 73.8168]]
+    },
+    {
+      "id": "R5", "name": "Hinjawadi Phase-1 Link", "source": "N_HINJ", "destination": "S3",
+      "distanceKm": null, "floodProne": false, "infrastructure": "ROAD",
+      "coordinates": [[18.5880, 73.7550], [18.5895, 73.7470], [18.5912, 73.7389]]
+    },
+    {
+      "id": "R8", "name": "Dapodi-Sangvi Bridge Road", "source": "N_DAPODI", "destination": "S2",
+      "distanceKm": 1.5, "floodProne": true, "infrastructure": "BRIDGE",
+      "coordinates": [[18.5710, 73.8290], [18.5718, 73.8220], [18.5724, 73.8168]]
+    },
+    {
+      "id": "R9", "name": "Dapodi Confluence Road", "source": "N_DAPODI", "destination": "S5",
+      "distanceKm": 1.6, "floodProne": false, "infrastructure": "ROAD",
+      "coordinates": [[18.5710, 73.8290], [18.5770, 73.8320], [18.5830, 73.8340]]
+    }
+  ]
+}

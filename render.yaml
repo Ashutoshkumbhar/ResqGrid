@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: resqgrid
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: PORT
+        value: 8000
+      # (Optional) Add your Gemini API key in Render Dashboard under Environment:
+      # - key: GEMINI_API_KEY
+      #   value: your_gemini_api_key_here

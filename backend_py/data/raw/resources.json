@@ -1,0 +1,7 @@
+[
+  { "id": "BOAT-02", "type": "RESCUE_BOAT", "name": "Rescue Boat 02", "locationName": "Hinjawadi Rescue Base", "nodeId": "N_HINJ", "latitude": 18.5880, "longitude": 73.7550, "status": "AVAILABLE", "speedKmh": 35, "mobile": true, "capacity": null, "currentOccupancy": 0 },
+  { "id": "AMB-01", "type": "AMBULANCE", "name": "Ambulance 01", "locationName": "Baner Emergency Base", "nodeId": "N_BANER", "latitude": 18.5620, "longitude": 73.7780, "status": "AVAILABLE", "speedKmh": 50, "mobile": true, "capacity": null, "currentOccupancy": 0 },
+  { "id": "TEAM-03", "type": "RESCUE_TEAM", "name": "Rescue Team 03 (NDRF)", "locationName": "Dapodi Fire & Rescue HQ", "nodeId": "N_DAPODI", "latitude": 18.5710, "longitude": 73.8290, "status": "AVAILABLE", "speedKmh": 45, "mobile": true, "capacity": null, "currentOccupancy": 0 },
+  { "id": "HOSP-01", "type": "HOSPITAL", "name": "District Hospital 01", "locationName": "Baner Medical Enclave", "nodeId": "S4", "latitude": 18.5550, "longitude": 73.8050, "status": "AVAILABLE", "speedKmh": 0, "mobile": false, "capacity": 180, "currentOccupancy": 46 },
+  { "id": "SHELTER-01", "type": "SHELTER", "name": "Shelter 01 (Baner Hilltop, cap. 600)", "locationName": "Baner Hilltop Community Centre", "nodeId": "S4", "latitude": 18.5610, "longitude": 73.7890, "status": "AVAILABLE", "speedKmh": 0, "mobile": false, "capacity": 600, "currentOccupancy": 180 }
+]

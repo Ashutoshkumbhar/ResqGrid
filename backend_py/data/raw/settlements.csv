@@ -1,0 +1,6 @@
+id,name,latitude,longitude,population,elderly,pregnant,disabled,patients,elevationM,rainfall24hMm,rainfallIntensityMmHr,waterLevelM,catchmentFactor,dataSource
+S1,Village A (Wakad Khurd),18.5987,73.7645,2140,390,120,180,90,573,118,12,1.7,0.8,SIMULATED_PROTOTYPE
+S2,  Village B (Sangvi Riverside) ,18.5724,73.8168,1850,420,145,210,110,559,128,14,2.05,1.0,SIMULATED_PROTOTYPE
+S3,Village C (Hinjawadi Lowlands),18.5912,73.7389,"3,420",520,150,230,160,587,84,,0.95,0.5,SIMULATED_PROTOTYPE
+S4,Village D (Baner Heights),18.5590,73.7868,4100,610,180,280,140,573,45,4,,0.3,SIMULATED_PROTOTYPE
+S5,Village E (Dapodi Confluence),18.5830,73.8340,1650,310,100,170,80,562,70,7,1.25,0.9,SIMULATED_PROTOTYPE

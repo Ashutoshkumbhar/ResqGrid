@@ -1,0 +1,32 @@
+[
+  {
+    "id": "REP-101",
+    "settlementId": "S2",
+    "location": "Village B (Sangvi Riverside)",
+    "description": "Pawana river embankment water encroaching onto market perimeter; ground floor shops submerged 0.5m.",
+    "severity": "HIGH",
+    "reporterType": "WARD_OFFICER",
+    "minutesAgo": 10,
+    "extractedInfo": { "location": "Village B (Sangvi Riverside)", "settlementId": "S2", "severity": "HIGH", "roadStatus": "OPEN", "infrastructure": "EMBANKMENT", "confidence": 0.93, "source": "SEED_DATA" }
+  },
+  {
+    "id": "REP-102",
+    "settlementId": "S2",
+    "location": "Village B (Sangvi Riverside)",
+    "description": "Water entering houses in lane 4 near the riverbank, families moving to upper floors.",
+    "severity": "HIGH",
+    "reporterType": "CITIZEN",
+    "minutesAgo": 18,
+    "extractedInfo": { "location": "Village B (Sangvi Riverside)", "settlementId": "S2", "severity": "HIGH", "roadStatus": "OPEN", "infrastructure": "HOUSING", "confidence": 0.9, "source": "SEED_DATA" }
+  },
+  {
+    "id": "REP-103",
+    "settlementId": "S1",
+    "location": "Village A (Wakad Khurd)",
+    "description": "Drainage overflow near bus terminus; water accumulating on service lane.",
+    "severity": "MODERATE",
+    "reporterType": "CITIZEN",
+    "minutesAgo": 25,
+    "extractedInfo": { "location": "Village A (Wakad Khurd)", "settlementId": "S1", "severity": "MODERATE", "roadStatus": "OPEN", "infrastructure": "DRAINAGE", "confidence": 0.88, "source": "SEED_DATA" }
+  }
+]

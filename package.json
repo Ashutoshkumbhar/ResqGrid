@@ -1,0 +1,7 @@
+{
+  "name": "resqgrid",
+  "private": true,
+  "scripts": {
+    "start": "python run.py"
+  }
+}

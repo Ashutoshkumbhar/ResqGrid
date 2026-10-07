@@ -1,0 +1,78 @@
+{
+  "_note": "REPLAYED / NOT LIVE. Reconstructed prototype scenario for demonstration; not a real observed event record.",
+  "eventName": "Heavy Rainfall Scenario — Mula-Pawana Basin",
+  "date": "2026-08-15",
+  "frames": [
+    {
+      "time": "06:00", "label": "Pre-event: light monsoon showers, rivers within banks",
+      "settlements": {
+        "S1": { "rainfall": 35, "intensity": 3, "waterLevelM": 0.9 },
+        "S2": { "rainfall": 40, "intensity": 4, "waterLevelM": 1.1 },
+        "S3": { "rainfall": 30, "intensity": 3, "waterLevelM": 0.7 },
+        "S4": { "rainfall": 25, "intensity": 2, "waterLevelM": 0.5 },
+        "S5": { "rainfall": 35, "intensity": 3, "waterLevelM": 0.9 }
+      },
+      "roads": { "R12": "OPEN", "R7": "OPEN", "R4": "OPEN", "R8": "OPEN" }
+    },
+    {
+      "time": "08:00", "label": "Rainfall intensifies over the upper catchment",
+      "settlements": {
+        "S1": { "rainfall": 78, "intensity": 12, "waterLevelM": 1.3 },
+        "S2": { "rainfall": 92, "intensity": 14, "waterLevelM": 1.6 },
+        "S3": { "rainfall": 60, "intensity": 9, "waterLevelM": 0.9 },
+        "S4": { "rainfall": 45, "intensity": 6, "waterLevelM": 0.6 },
+        "S5": { "rainfall": 70, "intensity": 10, "waterLevelM": 1.3 }
+      }
+    },
+    {
+      "time": "10:00", "label": "Pawana gauge crosses WARNING; first field reports from Sangvi",
+      "settlements": {
+        "S1": { "rainfall": 118, "intensity": 18, "waterLevelM": 1.7 },
+        "S2": { "rainfall": 136, "intensity": 20, "waterLevelM": 2.1 },
+        "S3": { "rainfall": 88, "intensity": 12, "waterLevelM": 1.0 },
+        "S4": { "rainfall": 60, "intensity": 8, "waterLevelM": 0.7 },
+        "S5": { "rainfall": 104, "intensity": 15, "waterLevelM": 1.6 }
+      },
+      "reports": [
+        { "settlementId": "S2", "location": "Village B (Sangvi Riverside)", "description": "River water entering market lanes, shops submerged.", "severity": "HIGH", "reporterType": "WARD_OFFICER",
+          "extractedInfo": { "location": "Village B (Sangvi Riverside)", "settlementId": "S2", "severity": "HIGH", "roadStatus": "OPEN", "infrastructure": "HOUSING", "confidence": 0.92 } }
+      ]
+    },
+    {
+      "time": "12:00", "label": "Peak rainfall; Wakad bridge reported submerged",
+      "settlements": {
+        "S1": { "rainfall": 158, "intensity": 24, "waterLevelM": 2.2 },
+        "S2": { "rainfall": 172, "intensity": 26, "waterLevelM": 2.5 },
+        "S3": { "rainfall": 112, "intensity": 16, "waterLevelM": 1.2 },
+        "S4": { "rainfall": 74, "intensity": 10, "waterLevelM": 0.8 },
+        "S5": { "rainfall": 131, "intensity": 19, "waterLevelM": 1.9 }
+      },
+      "roads": { "R12": "BLOCKED" },
+      "reports": [
+        { "settlementId": "S1", "location": "Village A (Wakad Khurd)", "description": "Wakad bridge submerged, vehicles cannot cross, water in houses.", "severity": "HIGH", "reporterType": "FIRST_RESPONDER",
+          "extractedInfo": { "location": "Village A (Wakad Khurd)", "settlementId": "S1", "severity": "HIGH", "roadStatus": "BLOCKED", "infrastructure": "BRIDGE", "confidence": 0.94 } }
+      ]
+    },
+    {
+      "time": "14:00", "label": "Riverside link R4 overtopped; Dapodi bridge at risk",
+      "settlements": {
+        "S1": { "rainfall": 171, "intensity": 15, "waterLevelM": 2.4 },
+        "S2": { "rainfall": 185, "intensity": 16, "waterLevelM": 2.6 },
+        "S3": { "rainfall": 120, "intensity": 9, "waterLevelM": 1.3 },
+        "S4": { "rainfall": 80, "intensity": 6, "waterLevelM": 0.8 },
+        "S5": { "rainfall": 142, "intensity": 12, "waterLevelM": 2.1 }
+      },
+      "roads": { "R4": "BLOCKED", "R8": "AT_RISK" }
+    },
+    {
+      "time": "16:00", "label": "Rain easing; rivers still above danger mark",
+      "settlements": {
+        "S1": { "rainfall": 176, "intensity": 6, "waterLevelM": 2.3 },
+        "S2": { "rainfall": 190, "intensity": 7, "waterLevelM": 2.5 },
+        "S3": { "rainfall": 123, "intensity": 4, "waterLevelM": 1.2 },
+        "S4": { "rainfall": 82, "intensity": 3, "waterLevelM": 0.8 },
+        "S5": { "rainfall": 146, "intensity": 5, "waterLevelM": 2.0 }
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build Outputs
+dist/
+build/
+target/
+*.egg-info/
+.eggs/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Tools & Portable Binaries
+.tools/
+
+# OS and Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local runtime database files
+*.db
+*.sqlite3
+data_runtime/
+backend/data/
+
