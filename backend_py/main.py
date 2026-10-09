@@ -21,6 +21,7 @@ from services.state_manager import state_manager
 from services.evaluation_service import get_false_alert_evaluation, get_impact_comparison, get_accuracy_report
 from services.forecast_service import build_short_term_forecast
 from services.ai_ground_report import set_gemini_api_key, get_gemini_api_key, GEMINI_MODEL
+from services.alert_service import TwilioProvider
 from services.audit_service import list_audit_entries
 
 REPLAY_FRAME_SECONDS = 4
@@ -113,6 +114,8 @@ async def websocket_endpoint(websocket: WebSocket):
             await websocket.receive_text()
             await websocket.send_json({"type": "PONG"})
     except WebSocketDisconnect:
+        manager.disconnect(websocket)
+    except Exception:
         manager.disconnect(websocket)
 
 
@@ -330,11 +333,15 @@ def get_impact_compare():
 @app.get("/api/config/status")
 def get_config_status():
     has_key = bool(get_gemini_api_key())
+    twilio_configured = TwilioProvider.is_configured()
     return {
         "geminiConfigured": has_key,
         "aiProvider": f"Gemini ({GEMINI_MODEL}) with local parser fallback" if has_key else "Local rule-based parser (Gemini key not set)",
         "weatherProvider": "Open-Meteo API (cached 60 s, fallback dataset)",
         "routingProvider": "NetworkX district graph + OSRM street ETA check",
+        "twilioConfigured": twilio_configured,
+        "alertProvider": "Twilio SMS/WhatsApp + console audit" if twilio_configured else "Console audit only (set Twilio env vars for real SMS)",
+        "twilioRequiredEnv": ["TWILIO_ACCOUNT_SID", "TWILIO_AUTH_TOKEN", "TWILIO_FROM_NUMBER"],
         "webSocketClients": len(manager.active_connections),
     }
 

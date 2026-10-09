@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { RISK_COLORS, ROAD_COLORS, RESOURCE_ICONS, shortName } from '../utils';
 
@@ -30,7 +30,7 @@ export default function MapView({ systemState, onSelectSettlement = null, height
   const mapRef = useRef(null);
   const layerRef = useRef(null);
   const [tilesOffline, setTilesOffline] = useState(false);
-  const forecastBySettlement = systemState?.forecast?.settlements || {};
+  const forecastBySettlement = useMemo(() => systemState?.forecast?.settlements || {}, [systemState?.forecast?.settlements]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return undefined;

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
   KeyRound, 
-  CheckCircle, 
   X, 
   Save, 
-  Cpu, 
   CloudRain, 
   Navigation, 
   Wifi,
-  Sparkles,
-  ExternalLink
+  Sparkles
 } from 'lucide-react';
 
 export default function ApiKeyModal({ isOpen, onClose, onSaveGeminiKey }) {
@@ -42,7 +39,7 @@ export default function ApiKeyModal({ isOpen, onClose, onSaveGeminiKey }) {
       const res = await fetch('/api/config/status');
       const data = await res.json();
       setConfigStatus(data);
-    } catch (err) {
+    } catch {
       setStatusMsg('Failed to save key');
     } finally {
       setSaving(false);

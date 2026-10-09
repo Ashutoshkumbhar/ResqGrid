@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Truck, OctagonAlert, Navigation, Loader2 } from 'lucide-react';
+import { Home, Truck, OctagonAlert, Navigation, Loader2, Route } from 'lucide-react';
 import { RouteStatusCard } from './DashboardPage';
 import { RESOURCE_ICONS, ROAD_COLORS, pct, shortName } from '../utils';
 
@@ -17,6 +17,11 @@ export default function ResourcesRoutesPage({ systemState, actions, busy }) {
   const [scenario, setScenario] = useState(null);
   const [result, setResult] = useState(null);
   const recs = systemState.recommendations;
+  const evacuationPlans = settlements.map((s) => ({
+    settlement: s,
+    plan: systemState.evacuationPlans?.[s.id],
+    rec: recs.find((r) => r.settlementId === s.id),
+  }));
 
   const runScenario = async (n, apply = false) => {
     setScenario(n);
@@ -152,6 +157,69 @@ export default function ResourcesRoutesPage({ systemState, actions, busy }) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="panel-card">
+        <div className="panel-header">
+          <div className="panel-title"><Home size={16} color="#2563eb" /><span>Evacuation plan per village</span></div>
+          <span style={{ fontSize: 11, color: '#64748b' }}>Shelter, safest route, ETA and assigned response unit</span>
+        </div>
+        <div className="panel-body evacuation-grid">
+          {evacuationPlans.map(({ settlement, plan, rec }) => {
+            const route = plan?.route;
+            const invalid = route?.originalRouteStatus === 'INVALID';
+            const activeRoads = invalid ? route?.alternativeRoadIds : route?.originalRoadIds;
+            const firstRoad = route?.originalRoadIds?.[0];
+            return (
+              <div key={settlement.id} className={`evac-card ${invalid ? 'changed' : ''}`}>
+                <div className="evac-card-head">
+                  <div>
+                    <div style={{ fontSize: 11, color: '#64748b', fontWeight: 800 }}>#{settlement.priorityRank} PRIORITY</div>
+                    <div style={{ fontSize: 15, fontWeight: 900 }}>{shortName(settlement.name)}</div>
+                  </div>
+                  <span className={`risk-badge ${settlement.riskStatus === 'CRITICAL' ? 'badge-critical' : settlement.riskStatus === 'HIGH' ? 'badge-high' : 'badge-moderate'}`}>
+                    {settlement.riskStatus}
+                  </span>
+                </div>
+
+                <div className="evac-metrics">
+                  <div><span>Shelter</span><b>{plan?.shelter?.name || 'No shelter'}</b></div>
+                  <div><span>ETA</span><b>{route?.etaMinutes != null ? `${route.etaMinutes} min` : 'Escalate'}</b></div>
+                  <div><span>Free capacity</span><b>{plan?.shelter?.freeCapacity ?? 0}</b></div>
+                  <div><span>Resource</span><b>{rec?.recommendedResourceName || 'Escalate'}</b></div>
+                </div>
+
+                {route ? (
+                  <div className="evac-route">
+                    <div className={`route-card ${invalid ? 'invalid' : 'valid'}`}>
+                      <Route size={14} />
+                      <span>Original: {route.originalRoadIds?.join(' -> ') || 'none'}</span>
+                      <b>{invalid ? 'INVALID' : 'VALID'}</b>
+                    </div>
+                    {invalid && (
+                      <div className="route-card alt">
+                        <Route size={14} />
+                        <span>Alternative: {route.alternativeRoadIds?.join(' -> ') || 'none'}</span>
+                        <b>{route.alternativeRouteStatus}</b>
+                      </div>
+                    )}
+                    <div style={{ fontSize: 11, color: '#475569' }}>
+                      Safest now: <b>{activeRoads?.join(' -> ') || 'local coordination'}</b>
+                      {route.blockedRoadsOnPath?.length > 0 && <span style={{ color: '#dc2626' }}> | blocked: {route.blockedRoadsOnPath.join(', ')}</span>}
+                    </div>
+                    {firstRoad && (
+                      <button className="btn btn-secondary" style={{ marginTop: 8, fontSize: 11, padding: '5px 9px' }} disabled={!!busy} onClick={() => actions.setRoad(firstRoad, invalid ? 'OPEN' : 'BLOCKED')}>
+                        {invalid ? `Reopen ${firstRoad}` : `Block ${firstRoad} and re-plan`}
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="evac-escalate">{plan?.message || 'No viable evacuation route available.'}</div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

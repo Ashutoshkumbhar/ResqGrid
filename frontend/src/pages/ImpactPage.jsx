@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend } from 'recharts';
-import { Activity, Gauge, Users, TimerReset, TriangleAlert } from 'lucide-react';
+import { Activity, Gauge, Users } from 'lucide-react';
 import { api } from '../utils';
-
-const metricMeta = [
-  { key: 'villagesReached', label: 'Villages reached', icon: Users, color: '#38bdf8' },
-  { key: 'totalPopulationReached', label: 'Population reached', icon: Users, color: '#22c55e' },
-  { key: 'averageResponseTimeMinutes', label: 'Avg response time', icon: TimerReset, color: '#f59e0b' },
-  { key: 'wastedDispatches', label: 'Wasted dispatches', icon: TriangleAlert, color: '#ef4444' },
-];
-
-function formatMetric(metric, value) {
-  if (metric.key === 'averageResponseTimeMinutes') return `${value} min`;
-  if (metric.key === 'totalPopulationReached') return `${value.toLocaleString()} people`;
-  return value;
-}
 
 export default function ImpactPage() {
   const [impact, setImpact] = useState(null);

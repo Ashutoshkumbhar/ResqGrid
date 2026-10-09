@@ -8,6 +8,7 @@ import GroundReportsPage from './pages/GroundReportsPage';
 import ResourcesRoutesPage from './pages/ResourcesRoutesPage';
 import ImpactPage from './pages/ImpactPage';
 import EvaluationReplayPage from './pages/EvaluationReplayPage';
+import MobileReportPage from './pages/MobileReportPage';
 import { api } from './utils';
 
 const LAST_STATE_KEY = 'resqgrid:last-known-state';
@@ -47,7 +48,7 @@ function dataUrlToBlob(dataUrl) {
   return new Blob([bytes], { type: mime });
 }
 
-export default function App() {
+function DashboardApp() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [systemState, setSystemStateRaw] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -293,6 +294,8 @@ export default function App() {
     resourceStatus: (id, status, assignment) => run(`res-${id}`, `/api/resources/${id}/status`, { status, assignment },
       `${id} is now ${status.toLowerCase()}`),
     explain: (settlementId) => run('explain', '/api/explain', { settlementId }),
+    sendAlert: (payload) => run('alert-send', '/api/alerts/send', payload,
+      (d) => d.successfulDeliveries > 0 ? `Alert sent through ${d.providerResults?.map((p) => p.provider).join(', ')}` : 'Alert recorded; configure Twilio for real SMS'),
     replay: () => run('replay', '/api/simulate/replay', {}, 'Replay started (not live data)'),
     stopReplay: () => run('replay-stop', '/api/simulate/replay/stop', {}, 'Replay paused'),
     reset: () => run('reset', '/api/simulate/reset', {}, 'Reset to a normal day'),
@@ -354,4 +357,11 @@ export default function App() {
       )}
     </div>
   );
+}
+
+export default function App() {
+  if (typeof window !== 'undefined' && window.location.pathname.startsWith('/mobile-report')) {
+    return <MobileReportPage />;
+  }
+  return <DashboardApp />;
 }

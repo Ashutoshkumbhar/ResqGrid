@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { FileText, Send, Sparkles, CheckCircle, Loader2, Mic, MapPin, Camera, LocateFixed } from 'lucide-react';
-import { STAGE_COLORS, fmtAgo, pct } from '../utils';
+import React, { useEffect, useMemo, useState } from 'react';
+import QRCode from 'qrcode';
+import { Bell, FileText, Send, Sparkles, CheckCircle, Loader2, QrCode, Smartphone } from 'lucide-react';
+import { api, STAGE_COLORS, fmtAgo, pct } from '../utils';
 
 const PRESETS = [
   { text: 'Bridge near Village A is blocked and water has entered nearby houses.', loc: 'S1', sev: 'HIGH', rep: 'CITIZEN' },
@@ -20,13 +21,25 @@ function localNow() {
 
 export default function GroundReportsPage({ systemState, actions, busy }) {
   const settlements = [...systemState.settlements].sort((a, b) => a.id.localeCompare(b.id));
+  const topRecommendation = systemState.recommendations?.[0];
   const [description, setDescription] = useState(PRESETS[0].text);
   const [locationId, setLocationId] = useState('S1');
   const [severity, setSeverity] = useState('HIGH');
   const [reporterType, setReporterType] = useState('CITIZEN');
   const [timestamp, setTimestamp] = useState(localNow());
   const [last, setLast] = useState(null);
+  const [qrDataUrl, setQrDataUrl] = useState('');
+  const [config, setConfig] = useState(null);
+  const [recipient, setRecipient] = useState('');
+  const [alertSettlementId, setAlertSettlementId] = useState(topRecommendation?.settlementId || 'S1');
   const submitting = busy === 'report';
+  const alerting = busy === 'alert-send';
+  const mobileReportUrl = useMemo(() => `${window.location.origin}/mobile-report`, []);
+
+  useEffect(() => {
+    QRCode.toDataURL(mobileReportUrl, { margin: 1, width: 220 }).then(setQrDataUrl).catch(() => setQrDataUrl(''));
+    api('/api/config/status').then(setConfig).catch(() => setConfig(null));
+  }, [mobileReportUrl]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -46,6 +59,42 @@ export default function GroundReportsPage({ systemState, actions, busy }) {
         <p style={{ fontSize: 13, color: '#64748b', marginTop: 4 }}>
           LLM extracts structured fields → system logic updates roads, risk, priority, routes and resources.
         </p>
+      </div>
+
+      <div className="panel-card live-loop-panel">
+        <div className="panel-header">
+          <div className="panel-title"><Smartphone size={16} color="#2563eb" /><span>Live citizen-to-rescue loop</span></div>
+          <span style={{ fontSize: 11, color: config?.twilioConfigured ? '#166534' : '#92400e', fontWeight: 800 }}>
+            {config?.alertProvider || 'Checking alert provider...'}
+          </span>
+        </div>
+        <div className="panel-body live-loop-grid">
+          <div className="qr-card">
+            <div className="qr-image">{qrDataUrl ? <img src={qrDataUrl} alt="Mobile report QR code" /> : <QrCode size={96} />}</div>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 800 }}>Judge phone entry</div>
+              <a href={mobileReportUrl} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#2563eb', wordBreak: 'break-all' }}>{mobileReportUrl}</a>
+              <div style={{ fontSize: 11, color: '#64748b', marginTop: 6 }}>Opens a camera-first page that uploads to /api/reports/photo with GPS when permission is granted.</div>
+            </div>
+          </div>
+
+          <div className="alert-send-card">
+            <div style={{ fontSize: 13, fontWeight: 800, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}><Bell size={15} /> Send operator SMS</div>
+            <div className="alert-send-row">
+              <select value={alertSettlementId} onChange={(e) => setAlertSettlementId(e.target.value)} style={field}>
+                {settlements.map((s) => <option key={s.id} value={s.id}>#{s.priorityRank} {s.name}</option>)}
+              </select>
+              <input value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="+91..." style={field} />
+              <button className="btn btn-primary" disabled={alerting} onClick={() => actions.sendAlert({ settlementId: alertSettlementId, recipient: recipient.trim() || undefined, language: 'en', channel: 'sms' })}>
+                {alerting ? <Loader2 size={14} className="spin" /> : <Send size={14} />}
+                Send SMS
+              </button>
+            </div>
+            <div style={{ fontSize: 11, color: '#64748b', marginTop: 8 }}>
+              Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER and optionally TWILIO_ALERT_RECIPIENT in backend_py/.env for real delivery.
+            </div>
+          </div>
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(340px, 460px) 1fr', gap: 24, alignItems: 'start' }}>
