@@ -221,3 +221,85 @@ def shortest_distance_km(src: str, dst: str, roads: List[Dict[str, Any]]) -> Opt
     if path is None:
         return None
     return round(sum(G[u][v]["road"]["distanceKm"] for u, v in zip(path, path[1:])), 1)
+
+# ======================================================================
+# APPEND THIS WHOLE BLOCK TO THE END OF  backend_py/services/routing_engine.py
+# (it reuses build_graph, _shortest, _describe and _eta that are already there)
+# ======================================================================
+import math
+
+
+def plan_route_predictive(resource: Dict[str, Any], target: Dict[str, Any], nodes: Dict[str, Any],
+                          roads: List[Dict[str, Any]], road_probs: Dict[str, float],
+                          road_probs_low: Optional[Dict[str, float]] = None,
+                          risk_aversion_km: float = 25.0, min_prob: float = 0.02) -> Dict[str, Any]:
+    """
+    Choose the route with the best chance of still being usable on ARRIVAL.
+
+    road_probs      : road_id -> P(road usable at arrival), from AccessPredictor.predict()["p"]
+    road_probs_low  : a more cautious value (mean - 1 std). If given, routing uses it, so
+                      uncertain roads are avoided more.
+    Cost of a road  = distanceKm + risk_aversion_km * (-ln p)
+                      (25 means: one unit of -ln p is worth 25 extra km of driving)
+    Confirmed closures (status BLOCKED) are never used: they stay binding until the
+    platform reopens them with newer verified evidence.
+    Route reliability = product of segment probabilities (assumes segments fail
+    independently, which is a simplification).
+    """
+    src, dst = resource["nodeId"], target["id"]
+    speed = resource.get("speedKmh") or 40
+    cost_probs = road_probs_low if road_probs_low else road_probs
+
+    def prob_of(r, source):
+        return source.get(r["id"], 1.0 if r["status"] == "OPEN" else 0.7)
+
+    G = nx.Graph()
+    for r in roads:
+        if r["status"] == "BLOCKED":
+            continue
+        p = prob_of(r, cost_probs)
+        if p < min_prob:
+            continue
+        weight = r["distanceKm"] + risk_aversion_km * (-math.log(max(p, 1e-6)))
+        u, v = r["source"], r["destination"]
+        if G.has_edge(u, v) and G[u][v]["weight"] <= weight:
+            continue
+        G.add_edge(u, v, weight=weight, road=r)
+
+    base = {"method": "PREDICTIVE_EXPECTED_SUCCESS", "resourceId": resource["id"], "resourceName": resource["name"],
+            "targetSettlementId": dst, "targetSettlementName": target["name"]}
+
+    path = _shortest(G, src, dst)
+    if path is None:
+        return {**base, "roadIds": [], "reliability": 0.0, "reliabilityConservative": 0.0, "escalationRequired": True,
+                "explanation": f"No route to {target['name']} with an acceptable chance of staying open. Escalation required."}
+
+    chosen = _describe(G, path, nodes)
+    ids = chosen["roadIds"]
+    live = {r["id"]: r for r in roads}
+    rel = math.prod(prob_of(live[i], road_probs) for i in ids)
+    rel_low = math.prod(prob_of(live[i], cost_probs) for i in ids)
+
+    # What the current-status-only router would have chosen (the baseline), for comparison
+    cur_G = build_graph(roads, respect_status=True)
+    cur_path = _shortest(cur_G, src, dst)
+    base_ids, base_rel, base_km = [], None, None
+    if cur_path:
+        cur = _describe(cur_G, cur_path, nodes)
+        base_ids, base_km = cur["roadIds"], cur["distanceKm"]
+        base_rel = math.prod(prob_of(live[i], road_probs) for i in base_ids)
+    differs = bool(base_ids) and base_ids != ids
+
+    if differs:
+        explanation = (f"Chose {' → '.join(ids)} (reliability {rel:.0%}) over the shortest currently-open route "
+                       f"{' → '.join(base_ids)} (reliability {base_rel:.0%}): the shortest route is likely to lose a road before arrival.")
+    else:
+        explanation = f"Route {' → '.join(ids)} is both the shortest open route and the most reliable (reliability {rel:.0%})."
+
+    return {**base, "roadIds": ids, "roadNames": chosen["roadNames"], "coordinates": chosen["coordinates"],
+            "distanceKm": chosen["distanceKm"], "etaMinutes": _eta(chosen["distanceKm"], speed),
+            "reliability": round(rel, 3), "reliabilityConservative": round(rel_low, 3),
+            "segmentProbabilities": {i: round(prob_of(live[i], road_probs), 3) for i in ids},
+            "baselineRoadIds": base_ids, "baselineReliability": None if base_rel is None else round(base_rel, 3),
+            "baselineDistanceKm": base_km, "differsFromCurrentStatusRoute": differs,
+            "escalationRequired": False, "explanation": explanation}
